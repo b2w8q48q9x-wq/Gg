@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Free Time Hub</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f4f6f8;
+  text-align: center;
+}
+
+header {
+  background: #1e293b;
+  color: white;
+  padding: 20px;
+}
+
+nav {
+  background: #334155;
+  padding: 10px;
+}
+
+nav button {
+  margin: 5px;
+  padding: 10px 16px;
+  border: none;
+  background: #2563eb;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+section {
+  display: none;
+  padding: 20px;
+}
+
+section.active {
+  display: block;
+}
+
+.card {
+  background: white;
+  margin: 15px auto;
+  padding: 15px;
+  max-width: 500px;
+  border-radius: 10px;
+}
+
+iframe {
+  width: 100%;
+  height: 70vh;
+  border: none;
+  border-radius: 10px;
+}
+
+select, input, button {
+  margin: 10px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>Free Time Hub</h1>
+  <p>School-approved games & tools</p>
+</header>
+
+<nav>
+  <button onclick="showTab('home')">Home</button>
+  <button onclick="showTab('games')">Games</button>
+  <button onclick="showTab('browser')">Browser</button>
+</nav>
+
+<!-- HOME -->
+<section id="home" class="active">
+  <div class="card">
+    <h2>Welcome</h2>
+    <p>This site is designed for school free-time use only.</p>
+    <p>Includes casual games and approved educational websites.</p>
+  </div>
+</section>
+
+<!-- GAMES -->
+<section id="games">
+  <div class="card">
+    <h3>🏈 Retro Bowl</h3>
+    <iframe src="https://retro-bowl-six.vercel.app" loading="lazy"></iframe>
+  </div>
+
+  <div class="card">
+    <h3>🧱 Tetris</h3>
+    <iframe src="https://tetris.com/play-tetris" loading="lazy"></iframe>
+  </div>
+
+  <div class="card">
+    <h3>♟ Chess</h3>
+    <iframe src="https://www.chess.com/embed" loading="lazy"></iframe>
+  </div>
+
+  <div class="card">
+    <h3>🧠 2048</h3>
+    <iframe src="https://play2048.co" loading="lazy"></iframe>
+  </div>
+
+  <div class="card">
+    <h3>🎯 Google Snake</h3>
+    <iframe src="https://www.google.com/fbx?fbx=snake_arcade" loading="lazy"></iframe>
+  </div>
+</section>
+
+<!-- BROWSER -->
+<section id="browser">
+  <div class="card">
+    <h3>Open Web (Filtered)</h3>
+    <p style="font-size:14px;">
+      Loads public websites that follow school policies.<br>
+      Does not bypass network filters.
+    </p>
+
+    <input 
+      type="text" 
+      id="urlInput" 
+      placeholder="https://example.com"
+      style="width:80%; padding:8px;"
+    >
+
+    <br><br>
+    <button onclick="loadAnySite()">Load Site</button>
+
+    <p id="blockMsg" style="color:red;"></p>
+
+    <iframe 
+      id="browserFrame"
+      sandbox="allow-scripts allow-same-origin allow-forms"
+      loading="lazy">
+    </iframe>
+  </div>
+</section>
+
+<script>
+// Tab switching
+function showTab(tabId) {
+  document.querySelectorAll("section").forEach(sec => sec.classList.remove("active"));
+  document.getElementById(tabId).classList.add("active");
+}
+
+// Open web browser with filtering
+const blockedKeywords = [
+  "porn","xxx","sex","nsfw","hentai",
+  "gambling","casino","bet",
+  "drugs","weapon","guns","violence"
+];
+
+const blockedDomains = [
+  "pornhub.com","xvideos.com","xnxx.com","onlyfans.com","bet365.com"
+];
+
+function loadAnySite() {
+  const input = document.getElementById("urlInput").value.trim();
+  const msg = document.getElementById("blockMsg");
+  msg.textContent = "";
+
+  if (!input.startsWith("http")) {
+    msg.textContent = "Please include https://";
+    return;
+  }
+
+  const lower = input.toLowerCase();
+  for (let word of blockedKeywords) {
+    if (lower.includes(word)) {
+      msg.textContent = "Site blocked by content policy.";
+      return;
+    }
+  }
+
+  for (let domain of blockedDomains) {
+    if (lower.includes(domain)) {
+      msg.textContent = "This domain is blocked.";
+      return;
+    }
+  }
+
+  document.getElementById("browserFrame").src = input;
+}
+</script>
+
+</body>
+</html>
